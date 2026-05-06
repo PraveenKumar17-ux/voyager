@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: voyager
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODELS
+        value: gemini-3-flash-preview,gemini-2.5-flash
+      - key: GEMINI_TIMEOUT_MS
+        value: "12000"

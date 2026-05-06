@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voyager — AI Travel Planner</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body data-theme="classic">
+
+  <!-- ── THEME PANEL ── -->
+  <div class="theme-panel" id="themePanel">
+    <button class="theme-toggle-btn" id="themeToggleBtn" title="Customize Theme" aria-label="Open theme panel">
+      <i data-lucide="palette"></i>
+    </button>
+    <div class="theme-drawer" id="themeDrawer">
+      <div class="theme-drawer-header">
+        <span>🎨 Customise</span>
+        <button onclick="closeThemeDrawer()"><i data-lucide="x"></i></button>
+      </div>
+      <div class="theme-section">
+        <p class="theme-label">Colour Theme</p>
+        <div class="theme-swatches">
+          <button class="swatch active" data-theme="classic" style="background:linear-gradient(135deg,#0d1b2a,#c9964a)" title="Classic Gold" onclick="setTheme('classic')"></button>
+          <button class="swatch" data-theme="ocean" style="background:linear-gradient(135deg,#0a2342,#00b4d8)" title="Ocean Blue" onclick="setTheme('ocean')"></button>
+          <button class="swatch" data-theme="forest" style="background:linear-gradient(135deg,#1a2e1a,#52b788)" title="Forest Green" onclick="setTheme('forest')"></button>
+          <button class="swatch" data-theme="sunset" style="background:linear-gradient(135deg,#2d1b69,#e07055)" title="Sunset Coral" onclick="setTheme('sunset')"></button>
+          <button class="swatch" data-theme="desert" style="background:linear-gradient(135deg,#3d2b1f,#d4a373)" title="Desert Sand" onclick="setTheme('desert')"></button>
+          <button class="swatch" data-theme="aurora" style="background:linear-gradient(135deg,#0d0d2b,#7b2d8b)" title="Aurora Purple" onclick="setTheme('aurora')"></button>
+        </div>
+      </div>
+      <div class="theme-section">
+        <p class="theme-label">Background Style</p>
+        <div class="bg-options">
+          <button class="bg-opt active" data-bg="gradient" onclick="setBg('gradient')">🌅 Gradient</button>
+          <button class="bg-opt" data-bg="mesh" onclick="setBg('mesh')">🕸️ Mesh</button>
+          <button class="bg-opt" data-bg="geometric" onclick="setBg('geometric')">◆ Geometric</button>
+          <button class="bg-opt" data-bg="minimal" onclick="setBg('minimal')">○ Minimal</button>
+        </div>
+      </div>
+      <div class="theme-section">
+        <p class="theme-label">Mode</p>
+        <div class="mode-toggle">
+          <button class="mode-btn active" id="modeLight" onclick="setMode('light')">☀️ Light</button>
+          <button class="mode-btn" id="modeDark" onclick="setMode('dark')">🌙 Dark</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <span class="logo-icon">✦</span>
+        <span class="logo-text">Voyager</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#search-hub">Search</a></li>
+        <li><a href="#destinations">Destinations</a></li>
+        <li><a href="#planner">Planner</a></li>
+        <li><a href="#tips">Tips</a></li>
+      </ul>
+      <div class="nav-right">
+        <button class="nav-cta" onclick="scrollToPlanner()">
+          <i data-lucide="sparkles"></i> Plan My Trip
+        </button>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#search-hub" onclick="closeMobileMenu()">Search</a>
+      <a href="#destinations" onclick="closeMobileMenu()">Destinations</a>
+      <a href="#planner" onclick="closeMobileMenu()">Planner</a>
+      <a href="#tips" onclick="closeMobileMenu()">Tips</a>
+      <a href="#planner" class="mobile-cta" onclick="closeMobileMenu()">Plan My Trip ✦</a>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="hero">
+    <div class="hero-bg" id="heroBg">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+      <div class="grain"></div>
+      <div class="geo-grid" id="geoGrid"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        AI-Powered Travel Intelligence · India & Worldwide
+      </div>
+      <h1 class="hero-title">
+        Discover the World<br />
+        <em>Your Way</em>
+      </h1>
+      <p class="hero-subtitle">
+        From Goa beaches to Swiss Alps — our AI crafts bespoke itineraries for<br />
+        every dream, budget, and travel style.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="scrollToPlanner()">
+          <i data-lucide="sparkles"></i>
+          Start Planning Free
+        </button>
+        <button class="btn-ghost" onclick="scrollToDestinations()">
+          <i data-lucide="map"></i>
+          Explore Destinations
+        </button>
+        <button class="btn-ghost-alt" onclick="document.getElementById('search-hub').scrollIntoView({behavior:'smooth'})">
+          <i data-lucide="search"></i>
+          Quick Search
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><strong>1.2L+</strong><span>Trips Planned</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><strong>180+</strong><span>Countries</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><strong>500+</strong><span>Indian Cities</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><strong>4.9★</strong><span>Rating</span></div>
+      </div>
+    </div>
+
+    <div class="hero-cards">
+      <div class="float-card card-a">
+        <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=120&q=80" alt="Bali" />
+        <div><strong>Bali</strong><span>From ₹42,000</span></div>
+      </div>
+      <div class="float-card card-b">
+        <img src="https://images.unsplash.com/photo-1499678329028-101435549a4e?w=120&q=80" alt="Kerala" />
+        <div><strong>Kerala</strong><span>From ₹12,000</span></div>
+      </div>
+      <div class="float-card card-c">
+        <img src="https://images.unsplash.com/photo-1503917988258-f87a78e3c995?w=120&q=80" alt="Paris" />
+        <div><strong>Paris</strong><span>From ₹85,000</span></div>
+      </div>
+    </div>
+
+    <div class="hero-scroll-hint">
+      <i data-lucide="chevrons-down"></i>
+    </div>
+  </section>
+
+  <!-- ── SMART SEARCH HUB ── -->
+  <section class="search-hub" id="search-hub">
+    <div class="container">
+      <div class="search-tabs">
+        <button class="s-tab active" data-tab="domestic" onclick="switchSearchTab('domestic', this)">
+          <i data-lucide="flag"></i> Domestic India
+        </button>
+        <button class="s-tab" data-tab="international" onclick="switchSearchTab('international', this)">
+          <i data-lucide="globe"></i> International
+        </button>
+        <button class="s-tab" data-tab="multi" onclick="switchSearchTab('multi', this)">
+          <i data-lucide="git-branch"></i> Multi-Destination
+        </button>
+      </div>
+
+      <!-- Domestic Tab -->
+      <div class="search-panel" id="tab-domestic">
+        <div class="search-row">
+          <div class="search-field">
+            <label><i data-lucide="map-pin"></i> From</label>
+            <input type="text" id="dom-from" placeholder="Delhi, Mumbai, Chennai…" list="india-cities" />
+            <datalist id="india-cities">
+              <option value="Delhi"></option><option value="Mumbai"></option>
+              <option value="Chennai"></option><option value="Bangalore"></option>
+              <option value="Kolkata"></option><option value="Hyderabad"></option>
+              <option value="Ahmedabad"></option><option value="Pune"></option>
+              <option value="Kochi"></option><option value="Jaipur"></option>
+              <option value="Goa"></option><option value="Amritsar"></option>
+            </datalist>
+          </div>
+          <div class="search-swap" onclick="swapCities('dom-from','dom-to')">
+            <i data-lucide="arrow-left-right"></i>
+          </div>
+          <div class="search-field">
+            <label><i data-lucide="navigation"></i> To</label>
+            <input type="text" id="dom-to" placeholder="Manali, Ooty, Varanasi…" list="india-cities" />
+          </div>
+          <div class="search-field narrow">
+            <label><i data-lucide="calendar"></i> Date</label>
+            <input type="date" id="dom-date" />
+          </div>
+          <div class="search-field narrow">
+            <label><i data-lucide="users"></i> Travellers</label>
+            <select id="dom-travellers">
+              <option>1 Person</option><option>2 Persons</option>
+              <option>3–4 Persons</option><option>5+ Persons</option>
+            </select>
+          </div>
+          <button class="search-btn" onclick="quickSearch('domestic')">
+            <i data-lucide="search"></i> Search
+          </button>
+        </div>
+        <div class="search-quick-picks">
+          <span>Popular:</span>
+          <button onclick="setQuickSearch('dom-to','Manali')">🏔️ Manali</button>
+          <button onclick="setQuickSearch('dom-to','Goa')">🏖️ Goa</button>
+          <button onclick="setQuickSearch('dom-to','Kerala')">🌴 Kerala</button>
+          <button onclick="setQuickSearch('dom-to','Rajasthan')">🏰 Rajasthan</button>
+          <button onclick="setQuickSearch('dom-to','Andaman')">🐠 Andaman</button>
+          <button onclick="setQuickSearch('dom-to','Ladakh')">⛰️ Ladakh</button>
+          <button onclick="setQuickSearch('dom-to','Coorg')">☕ Coorg</button>
+        </div>
+      </div>
+
+      <!-- International Tab -->
+      <div class="search-panel hidden" id="tab-international">
+        <div class="search-row">
+          <div class="search-field">
+            <label><i data-lucide="plane-takeoff"></i> From City</label>
+            <input type="text" id="int-from" placeholder="Your city / airport" />
+          </div>
+          <div class="search-swap" onclick="swapCities('int-from','int-to')">
+            <i data-lucide="arrow-left-right"></i>
+          </div>
+          <div class="search-field">
+            <label><i data-lucide="globe-2"></i> Destination</label>
+            <input type="text" id="int-to" placeholder="Paris, Dubai, Tokyo…" list="intl-cities" />
+            <datalist id="intl-cities">
+              <option value="Paris, France"></option><option value="Dubai, UAE"></option>
+              <option value="Tokyo, Japan"></option><option value="Bali, Indonesia"></option>
+              <option value="Singapore"></option><option value="Bangkok, Thailand"></option>
+              <option value="London, UK"></option><option value="New York, USA"></option>
+              <option value="Maldives"></option><option value="Santorini, Greece"></option>
+            </datalist>
+          </div>
+          <div class="search-field narrow">
+            <label><i data-lucide="calendar"></i> Depart</label>
+            <input type="date" id="int-depart" />
+          </div>
+          <div class="search-field narrow">
+            <label><i data-lucide="calendar-check"></i> Return</label>
+            <input type="date" id="int-return" />
+          </div>
+          <button class="search-btn" onclick="quickSearch('international')">
+            <i data-lucide="search"></i> Search
+          </button>
+        </div>
+        <div class="search-quick-picks">
+          <span>Trending:</span>
+          <button onclick="setQuickSearch('int-to','Dubai, UAE')">🕌 Dubai</button>
+          <button onclick="setQuickSearch('int-to','Bali, Indonesia')">🌺 Bali</button>
+          <button onclick="setQuickSearch('int-to','Singapore')">🦁 Singapore</button>
+          <button onclick="setQuickSearch('int-to','Maldives')">🐟 Maldives</button>
+          <button onclick="setQuickSearch('int-to','Tokyo, Japan')">🗼 Tokyo</button>
+          <button onclick="setQuickSearch('int-to','Paris, France')">🗼 Paris</button>
+        </div>
+      </div>
+
+      <!-- Multi-Destination Tab -->
+      <div class="search-panel hidden" id="tab-multi">
+        <div class="multi-stops" id="multiStops">
+          <div class="multi-stop" data-stop="1">
+            <span class="stop-num">✦ 1</span>
+            <input type="text" placeholder="From city" class="stop-from" list="india-cities" />
+            <i data-lucide="arrow-right"></i>
+            <input type="text" placeholder="To city" class="stop-to" />
+            <input type="date" class="stop-date" />
+            <button class="remove-stop" onclick="removeStop(this)" style="display:none"><i data-lucide="x"></i></button>
+          </div>
+        </div>
+        <div class="multi-actions">
+          <button class="add-stop-btn" onclick="addStop()">
+            <i data-lucide="plus"></i> Add Destination
+          </button>
+          <button class="search-btn" onclick="quickSearch('multi')">
+            <i data-lucide="map"></i> Plan Multi-Trip
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── POPULAR DESTINATIONS ── -->
+  <section class="destinations" id="destinations">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Explore</span>
+        <h2 class="section-title">Popular Destinations</h2>
+        <p class="section-sub">From India's backyard to the world's most iconic spots</p>
+      </div>
+
+      <!-- Domestic/International filter -->
+      <div class="dest-filter">
+        <button class="filter-btn active" onclick="filterDest('all', this)">🌍 All</button>
+        <button class="filter-btn" onclick="filterDest('domestic', this)">🇮🇳 India</button>
+        <button class="filter-btn" onclick="filterDest('international', this)">✈️ International</button>
+        <button class="filter-btn" onclick="filterDest('beach', this)">🏖️ Beach</button>
+        <button class="filter-btn" onclick="filterDest('mountain', this)">🏔️ Mountain</button>
+        <button class="filter-btn" onclick="filterDest('culture', this)">🏛️ Culture</button>
+        <button class="filter-btn" onclick="filterDest('romantic', this)">💑 Romantic</button>
+      </div>
+
+      <div class="destinations-grid" id="destGrid">
+        <div class="dest-card dest-large" data-cat="international beach" onclick="quickPlan('Maldives')">
+          <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=600&q=80" alt="Maldives" loading="lazy" />
+          <div class="dest-overlay">
+            <div class="dest-tag">Beach</div>
+            <h3>Maldives</h3>
+            <p>Crystal waters & overwater villas</p>
+            <div class="dest-meta">
+              <span><i data-lucide="clock"></i> 7 days</span>
+              <span>From ₹1,20,000</span>
+            </div>
+            <div class="dest-rating">★★★★★ <em>4.9</em></div>
+            <button class="dest-plan-btn">Quick Plan <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+
+        <div class="dest-card" data-cat="domestic mountain" onclick="quickPlan('Manali, Himachal Pradesh')">
+          <img src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=400&q=80" alt="Manali" loading="lazy" />
+          <div class="dest-overlay">
+            <div class="dest-tag">Mountain</div>
+            <h3>Manali</h3>
+            <p>Snow peaks & adventure sports</p>
+            <div class="dest-meta"><span><i data-lucide="clock"></i> 5 days</span></div>
+            <div class="dest-rating">★★★★★ <em>4.8</em></div>
+            <button class="dest-plan-btn">Quick Plan <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+
+        <div class="dest-card" data-cat="domestic beach" onclick="quickPlan('Goa')">
+          <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&q=80" alt="Goa" loading="lazy" />
+          <div class="dest-overlay">
+            <div class="dest-tag">Beach</div>
+            <h3>Goa</h3>
+            <p>Beaches, nightlife & Portuguese charm</p>
+            <div class="dest-meta"><span><i data-lucide="clock"></i> 4 days</span></div>
+            <div class="dest-rating">★★★★☆ <em>4.6</em></div>
+            <button class="dest-plan-btn">Quick Plan <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+
+        <div class="dest-card" data-cat="international culture" onclick="quickPlan('Kyoto, Japan')">
+          <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400&q=80" alt="Kyoto" loading="lazy" />
+          <div class="dest-overlay">
+            <div class="dest-tag">Culture</div>
+            <h3>Kyoto</h3>
+            <p>Ancient temples & cherry blossoms</p>
+            <div class="dest-meta"><span><i data-lucide="clock"></i> 5 days</span></div>
+            <div class="dest-rating">★★★★★ <em>4.9</em></div>
+            <button class="dest-plan-btn">Quick Plan <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+
+        <div class="dest-card" data-cat="domestic culture" onclick="quickPlan('Rajasthan, India')">
+          <img src="https://images.unsplash.com/photo-1599661046289-e31897846e41?w=400&q=80" alt="Rajasthan" loading="lazy" />
+          <div class="dest-overlay">
+            <div class="dest-tag">Culture</div>
+            <h3>Rajasthan</h3>
+            <p>Forts, deserts & royal heritage</p>
+            <div class="dest-meta"><span><i data-lucide="clock"></i> 7 days</span></div>
+            <div class="dest-rating">★★★★★ <em>4.8</em></div>
+            <button class="dest-plan-btn">Quick Plan <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+
+        <div class="dest-card" data-cat="international romantic" onclick="quickPlan('Santorini, Greece')">
+          <img src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=400&q=80" alt="Santorini" loading="lazy" />
+          <div class="dest-overlay">
+            <div class="dest-tag">Romantic</div>
+            <h3>Santorini</h3>
+            <p>Blue domes & Aegean sunsets</p>
+            <div class="dest-meta"><span><i data-lucide="clock"></i> 6 days</span></div>
+            <div class="dest-rating">★★★★★ <em>4.9</em></div>
+            <button class="dest-plan-btn">Quick Plan <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+
+        <div class="dest-card" data-cat="domestic beach" onclick="quickPlan('Kerala, India')">
+          <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&q=80" alt="Kerala" loading="lazy" />
+          <div class="dest-overlay">
+            <div class="dest-tag">Nature</div>
+            <h3>Kerala</h3>
+            <p>Backwaters, spices & ayurveda</p>
+            <div class="dest-meta"><span><i data-lucide="clock"></i> 6 days</span></div>
+            <div class="dest-rating">★★★★★ <em>4.9</em></div>
+            <button class="dest-plan-btn">Quick Plan <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+
+        <div class="dest-card" data-cat="international beach" onclick="quickPlan('Bali, Indonesia')">
+          <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80" alt="Bali" loading="lazy" />
+          <div class="dest-overlay">
+            <div class="dest-tag">Adventure</div>
+            <h3>Bali</h3>
+            <p>Temples, rice terraces & surf</p>
+            <div class="dest-meta"><span><i data-lucide="clock"></i> 8 days</span></div>
+            <div class="dest-rating">★★★★☆ <em>4.7</em></div>
+            <button class="dest-plan-btn">Quick Plan <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+
+        <div class="dest-card" data-cat="domestic mountain" onclick="quickPlan('Ladakh, India')">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" alt="Ladakh" loading="lazy" />
+          <div class="dest-overlay">
+            <div class="dest-tag">Mountain</div>
+            <h3>Ladakh</h3>
+            <p>Moonscapes & Buddhist monasteries</p>
+            <div class="dest-meta"><span><i data-lucide="clock"></i> 7 days</span></div>
+            <div class="dest-rating">★★★★★ <em>5.0</em></div>
+            <button class="dest-plan-btn">Quick Plan <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── AI TRIP PLANNER FORM ── -->
+  <section class="planner" id="planner">
+    <div class="planner-bg"><div class="planner-orb"></div></div>
+    <div class="container">
+      <div class="section-header light">
+        <span class="section-tag alt">AI Planner</span>
+        <h2 class="section-title">Plan Your Dream Trip</h2>
+        <p class="section-sub">Fill in the basics — our AI handles everything else</p>
+      </div>
+
+      <div class="planner-card">
+        <div class="steps">
+          <div class="step active" id="step-ind-1"><div class="step-num">1</div><span>Destination</span></div>
+          <div class="step-line"></div>
+          <div class="step" id="step-ind-2"><div class="step-num">2</div><span>Dates & Budget</span></div>
+          <div class="step-line"></div>
+          <div class="step" id="step-ind-3"><div class="step-num">3</div><span>Preferences</span></div>
+        </div>
+
+        <!-- STEP 1 -->
+        <div class="form-step" id="form-step-1">
+          <div class="trip-type-toggle">
+            <button class="trip-type-btn active" id="ttDomestic" onclick="setTripType('domestic')">
+              <i data-lucide="flag"></i> Domestic (India)
+            </button>
+            <button class="trip-type-btn" id="ttInternational" onclick="setTripType('international')">
+              <i data-lucide="globe"></i> International
+            </button>
+          </div>
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="fromCity"><i data-lucide="map-pin"></i> Travelling From</label>
+              <input type="text" id="fromCity" placeholder="e.g. Chennai, Mumbai, Bangalore…" list="india-cities-plan" />
+              <datalist id="india-cities-plan">
+                <option value="Chennai"></option><option value="Mumbai"></option>
+                <option value="Delhi"></option><option value="Bangalore"></option>
+                <option value="Hyderabad"></option><option value="Kolkata"></option>
+                <option value="Kochi"></option><option value="Pune"></option>
+              </datalist>
+            </div>
+            <div class="form-group full">
+              <label for="destination"><i data-lucide="navigation"></i> Where to?</label>
+              <input type="text" id="destination" placeholder="e.g. Manali, Bali, Paris…" />
+            </div>
+          </div>
+          <div class="form-nav">
+            <button class="btn-next" onclick="nextStep(1)">Continue <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="form-step hidden" id="form-step-2">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="startDate"><i data-lucide="calendar"></i> Departure Date</label>
+              <input type="date" id="startDate" />
+            </div>
+            <div class="form-group">
+              <label for="endDate"><i data-lucide="calendar-check"></i> Return Date</label>
+              <input type="date" id="endDate" />
+            </div>
+            <div class="form-group">
+              <label for="travellers"><i data-lucide="users"></i> Travellers</label>
+              <select id="travellers">
+                <option value="1">1 — Solo</option>
+                <option value="2">2 — Couple</option>
+                <option value="3">3 — Small Group</option>
+                <option value="4">4 — Family</option>
+                <option value="5">5+</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="budget"><i data-lucide="wallet"></i> Budget (per person)</label>
+              <select id="budget">
+                <option value="budget">💰 Budget — Under ₹50K</option>
+                <option value="mid">💳 Mid-range — ₹50K–₹1.5L</option>
+                <option value="luxury" selected>✨ Luxury — ₹1.5L+</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-nav">
+            <button class="btn-back" onclick="prevStep(2)"><i data-lucide="arrow-left"></i> Back</button>
+            <button class="btn-next" onclick="nextStep(2)">Continue <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="form-step hidden" id="form-step-3">
+          <div class="form-group full">
+            <label><i data-lucide="heart"></i> Travel Style (select all that apply)</label>
+            <div class="tag-grid" id="activityTags">
+              <button class="tag-btn active" data-val="Adventure">🧗 Adventure</button>
+              <button class="tag-btn" data-val="Beach">🏖️ Beach</button>
+              <button class="tag-btn" data-val="Culture">🏛️ Culture</button>
+              <button class="tag-btn" data-val="Food & Dining">🍜 Food & Dining</button>
+              <button class="tag-btn" data-val="Shopping">🛍️ Shopping</button>
+              <button class="tag-btn" data-val="Nature">🌿 Nature</button>
+              <button class="tag-btn" data-val="Nightlife">🎉 Nightlife</button>
+              <button class="tag-btn" data-val="Wellness & Spa">🧘 Wellness & Spa</button>
+              <button class="tag-btn" data-val="Photography">📸 Photography</button>
+              <button class="tag-btn" data-val="Family Fun">👨‍👩‍👧 Family Fun</button>
+              <button class="tag-btn" data-val="Trekking">🥾 Trekking</button>
+              <button class="tag-btn" data-val="Backpacking">🎒 Backpacking</button>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="accommodation"><i data-lucide="building-2"></i> Accommodation</label>
+              <select id="accommodation">
+                <option value="5-star hotel">🌟 5-Star Hotel</option>
+                <option value="boutique hotel">🏡 Boutique Hotel</option>
+                <option value="resort">🌴 Resort</option>
+                <option value="Airbnb / apartment">🏠 Airbnb / Apartment</option>
+                <option value="hostel">🎒 Hostel</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="pace"><i data-lucide="activity"></i> Trip Pace</label>
+              <select id="pace">
+                <option value="relaxed">🐢 Relaxed</option>
+                <option value="moderate" selected>⚖️ Moderate</option>
+                <option value="packed">🚀 Packed</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group full">
+            <label for="specialRequests"><i data-lucide="message-square"></i> Special Requests (optional)</label>
+            <textarea id="specialRequests" rows="3" placeholder="Honeymoon, anniversary, allergies, accessibility needs…"></textarea>
+          </div>
+          <div class="form-nav">
+            <button class="btn-back" onclick="prevStep(3)"><i data-lucide="arrow-left"></i> Back</button>
+            <button class="btn-generate" onclick="generateItinerary()">
+              <i data-lucide="sparkles"></i> Generate My Itinerary
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ITINERARY RESULT MODAL ── -->
+  <div class="modal-overlay" id="itineraryModal" role="dialog" aria-modal="true">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal()" aria-label="Close"><i data-lucide="x"></i></button>
+      <div class="modal-loading" id="modalLoading">
+        <div class="loading-globe">✦</div>
+        <h3>Planning your perfect trip…</h3>
+        <p id="loadingMsg">Scanning 10,000+ flights</p>
+        <div class="loading-bar"><div class="loading-fill" id="loadingFill"></div></div>
+      </div>
+      <div class="modal-content hidden" id="modalContent">
+        <div class="modal-header">
+          <div>
+            <h2 id="itinTitle">Your Itinerary</h2>
+            <p id="itinMeta" class="itin-meta"></p>
+          </div>
+          <div class="modal-actions-top">
+            <button class="icon-btn" onclick="printItinerary()" title="Print"><i data-lucide="printer"></i></button>
+            <button class="icon-btn" onclick="copyItinerary()" title="Copy"><i data-lucide="copy"></i></button>
+            <button class="icon-btn" onclick="saveTrip()" title="Save Trip"><i data-lucide="bookmark"></i></button>
+          </div>
+        </div>
+        <div class="booking-bar">
+          <div class="booking-item"><i data-lucide="plane"></i><div><strong>Flight</strong><span id="bookFlight">—</span></div></div>
+          <div class="booking-item"><i data-lucide="bed-double"></i><div><strong>Hotel</strong><span id="bookHotel">—</span></div></div>
+          <div class="booking-item"><i data-lucide="car"></i><div><strong>Transport</strong><span id="bookTransport">—</span></div></div>
+          <div class="booking-item highlight"><i data-lucide="credit-card"></i><div><strong>Total Est.</strong><span id="bookTotal">—</span></div></div>
+        </div>
+        <div class="itin-body" id="itinBody"></div>
+        <div class="modal-footer">
+          <p class="footer-note">* Prices are AI-estimated. Click below to confirm on booking sites.</p>
+          <div class="booking-btns">
+            <button class="book-btn flights" onclick="openBooking('flights')"><i data-lucide="plane"></i> Book Flights</button>
+            <button class="book-btn hotels" onclick="openBooking('hotels')"><i data-lucide="building-2"></i> Book Hotels</button>
+            <button class="book-btn transport" onclick="openBooking('transport')"><i data-lucide="car"></i> Book Transport</button>
+            <button class="book-btn activities" onclick="openBooking('activities')"><i data-lucide="ticket"></i> Book Activities</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ 
+
+  <!-- ── TRAVEL TIPS ── -->
+  <section class="tips" id="tips">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Pro Tips</span>
+        <h2 class="section-title">Travel Smarter</h2>
+        <p class="section-sub">Insider knowledge for savvy Indian travellers</p>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card">
+          <div class="tip-icon">✈️</div>
+          <h3>Book Flights Early</h3>
+          <p>International flights from India are cheapest 8–12 weeks out. Domestic routes on IndiGo and Air India drop 30% when booked 3–4 weeks ahead.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">🏨</div>
+          <h3>Mix Accommodation</h3>
+          <p>Splurge for 2 nights at a luxury property, then pick boutique stays. You get the wow moments without burning your entire budget.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">💳</div>
+          <h3>Zero-Fee Cards</h3>
+          <p>Use HDFC Regalia, SBI Card Elite or Niyo Global for international travel — zero forex markup, free lounge access, and 5–10× reward points.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">🗺️</div>
+          <h3>Local Eats Win</h3>
+          <p>Skip tourist menus — the best thali in Rajasthan or noodles in Bangkok is always one street away. Our AI builds local dining into every plan.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">📱</div>
+          <h3>SIM or eSIM First</h3>
+          <p>Buy an Airtel or Jio international SIM at the airport or pick up a local eSIM via Airalo. Data is your lifeline — don't rely on hotel WiFi alone.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">🛡️</div>
+          <h3>Travel Insurance</h3>
+          <p>Buy Bajaj Allianz or TATA AIG international travel insurance — it covers trip cancellation, medical emergencies, and baggage loss for under ₹2,000.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">🧳</div>
+          <h3>Pack Light, Live More</h3>
+          <p>Carry-on only = no checked bag fees, no lost luggage, faster transit. Our AI generates climate-specific packing lists for every trip.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">🌤️</div>
+          <h3>Season Matters</h3>
+          <p>Bali in July vs November is a completely different experience. Our AI automatically factors in weather, festivals, and peak-season pricing.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">🎫</div>
+          <h3>Pre-book Attractions</h3>
+          <p>Taj Mahal, Louvre, Colosseum — book tickets 2–3 weeks in advance online to skip queues and save up to 20% on entry fees.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TESTIMONIALS ── -->
+  <section class="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Reviews</span>
+        <h2 class="section-title">What Travellers Say</h2>
+      </div>
+      <div class="testi-grid">
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p>"Planned our Bali honeymoon in 10 minutes. The AI suggested places we'd never have found on our own. Absolutely magical trip!"</p>
+          <div class="testi-author"><div class="testi-avatar">P</div><div><strong>Priya Sharma</strong><span>Mumbai · Honeymooner</span></div></div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p>"Used it for our family trip to Rajasthan — 4 people, 7 days, ₹1.2L budget. The day-by-day plan was spot on. Highly recommend!"</p>
+          <div class="testi-author"><div class="testi-avatar">R</div><div><strong>Rajan Nair</strong><span>Kochi · Family Traveller</span></div></div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p>"Solo backpacker here. The budget mode was a game-changer — found hostels, street food spots, and free attractions I'd have missed."</p>
+          <div class="testi-author"><div class="testi-avatar">A</div><div><strong>Ananya Das</strong><span>Kolkata · Solo Explorer</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="nav-logo">
+            <span class="logo-icon">✦</span>
+            <span class="logo-text">Voyager</span>
+          </div>
+          <p>AI-powered travel planning for every Indian explorer — from Leh to London.</p>
+          <div class="footer-badges">
+            <span>🇮🇳 Made in India</span>
+            <span>🤖 AI-Powered</span>
+            <span>🔒 Secure</span>
+          </div>
+        </div>
+        <div class="footer-links">
+          <div class="fl-col">
+            <strong>Product</strong>
+            <a href="#planner">Trip Planner</a>
+            <a href="#destinations">Destinations</a>
+            <a href="#tips">Travel Tips</a>
+          </div>
+          <div class="fl-col">
+            <strong>Destinations</strong>
+            <a href="#" onclick="quickPlan('Goa')">Goa</a>
+            <a href="#" onclick="quickPlan('Kerala, India')">Kerala</a>
+            <a href="#" onclick="quickPlan('Bali, Indonesia')">Bali</a>
+            <a href="#" onclick="quickPlan('Dubai, UAE')">Dubai</a>
+          </div>
+          <div class="fl-col">
+            <strong>Company</strong>
+            <a href="#">About Us</a>
+            <a href="#">Careers</a>
+            <a href="#">Blog</a>
+            <a href="#">Privacy</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Voyager. Built with ✦ and AI in India.</p>
+        <div class="social-links">
+          <a href="#" aria-label="Instagram">📸</a>
+          <a href="#" aria-label="Twitter">🐦</a>
+          <a href="#" aria-label="YouTube">▶️</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
