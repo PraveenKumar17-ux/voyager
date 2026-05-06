@@ -9,7 +9,7 @@ const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_MODELS = parseModelList(
-  process.env.GEMINI_MODELS || process.env.GEMINI_MODEL || 'gemini-3-flash'
+  process.env.GEMINI_MODELS || process.env.GEMINI_MODEL || 'gemini-2.0-flash'
 );
 const GEMINI_TIMEOUT_MS = Number(process.env.GEMINI_TIMEOUT_MS) || 12000;
 const genAI = GEMINI_API_KEY ? new GoogleGenerativeAI(GEMINI_API_KEY) : null;
