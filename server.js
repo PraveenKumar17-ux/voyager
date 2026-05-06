@@ -12,7 +12,7 @@ const GEMINI_MODELS = parseModelList(
   process.env.GEMINI_MODELS || process.env.GEMINI_MODEL || 'gemini-3.0-flash'
 );
 const GEMINI_TIMEOUT_MS = Number(process.env.GEMINI_TIMEOUT_MS) || 12000;
-const genAI = GEMINI_API_KEY ? new GoogleGenerativeAI(GEMINI_API_KEY) : null;
+const genAI = "AIzaSyBrkGROCzjflpmo--Lm8Fo7tuqpj7R8YxE";
 
 app.use(cors());
 app.use(express.json());
