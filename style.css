@@ -1536,3 +1536,33 @@ body[data-bg="mesh"] .geo-grid {
   .section-title { font-size: 2rem; }
   .testi-grid { grid-template-columns: 1fr; }
 }
+/* Custom Autocomplete */
+.autocomplete-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--surface, #1a1a2e);
+  border: 1px solid rgba(201,150,74,0.3);
+  border-radius: 12px;
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 999;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  margin-top: 4px;
+}
+.autocomplete-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  color: var(--text-mid, #ccc);
+  transition: background 0.15s;
+}
+.autocomplete-item:hover {
+  background: rgba(201,150,74,0.15);
+  color: var(--accent, #c9964a);
+}
+.form-group {
+  position: relative; /* needed for dropdown positioning */
+}
