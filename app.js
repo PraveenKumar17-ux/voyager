@@ -693,3 +693,67 @@ function showToast(msg, duration = 3500) {
    UTILS
 ════════════════════════════════════════ */
 const delay = ms => new Promise(r => setTimeout(r, ms));
+/* ════════════════════════════════════════
+   CUSTOM AUTOCOMPLETE
+════════════════════════════════════════ */
+const ALL_DESTINATIONS = [
+  'Manali, Himachal Pradesh','Goa','Kerala, India','Rajasthan, India',
+  'Ladakh, India','Andaman Islands','Coorg, Karnataka','Ooty, Tamil Nadu',
+  'Varanasi, UP','Jaipur, Rajasthan','Rishikesh, Uttarakhand','Darjeeling',
+  'Munnar, Kerala','Hampi, Karnataka','Puducherry','Mysore, Karnataka',
+  'Bali, Indonesia','Dubai, UAE','Singapore','Bangkok, Thailand',
+  'Tokyo, Japan','Kyoto, Japan','Paris, France','London, UK',
+  'New York, USA','Maldives','Santorini, Greece','Phuket, Thailand',
+  'Colombo, Sri Lanka','Kathmandu, Nepal','Bhutan','Istanbul, Turkey',
+  'Rome, Italy','Barcelona, Spain','Amsterdam, Netherlands','Zurich, Switzerland'
+];
+
+const INDIA_CITIES = [
+  'Chennai','Mumbai','Delhi','Bangalore','Hyderabad','Kolkata',
+  'Kochi','Pune','Ahmedabad','Jaipur','Surat','Amritsar','Goa'
+];
+
+function buildDropdown(dropdownId, items, inputId) {
+  const dropdown = document.getElementById(dropdownId);
+  dropdown.innerHTML = '';
+  if (!items.length) { dropdown.style.display = 'none'; return; }
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'autocomplete-item';
+    div.textContent = item;
+    div.onclick = () => {
+      document.getElementById(inputId).value = item;
+      dropdown.style.display = 'none';
+    };
+    dropdown.appendChild(div);
+  });
+  dropdown.style.display = 'block';
+}
+
+function showDestSuggestions() {
+  buildDropdown('destDropdown', ALL_DESTINATIONS, 'destination');
+}
+function filterDestSuggestions(val) {
+  const filtered = val
+    ? ALL_DESTINATIONS.filter(d => d.toLowerCase().includes(val.toLowerCase()))
+    : ALL_DESTINATIONS;
+  buildDropdown('destDropdown', filtered, 'destination');
+}
+
+function showFromSuggestions() {
+  buildDropdown('fromDropdown', INDIA_CITIES, 'fromCity');
+}
+function filterFromSuggestions(val) {
+  const filtered = val
+    ? INDIA_CITIES.filter(c => c.toLowerCase().includes(val.toLowerCase()))
+    : INDIA_CITIES;
+  buildDropdown('fromDropdown', filtered, 'fromCity');
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.form-group')) {
+    document.querySelectorAll('.autocomplete-dropdown')
+      .forEach(d => d.style.display = 'none');
+  }
+});
